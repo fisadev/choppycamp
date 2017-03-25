@@ -59,7 +59,7 @@ def add_room(current_map, room):
 
     for row in room:
         for index, item in enumerate(row):
-            current_map[init_y][init_x+index] = item
+            current_map[init_y][init_x + index] = item
         init_y += 1
 
     return current_map
@@ -67,7 +67,7 @@ def add_room(current_map, room):
 
 if __name__ == '__main__':
     m = generate(50, 40, 0.01, 0.01, 0.05)
-    r = generate(8, 8, 0, 0.4, 0.01, representation=constants.ROOM)
+    r = generate(8, 8, 0, 0.2, 0.4, representation=constants.ROOM)
     m = add_room(m, r)
     v = visualizer.MapVisualizer()
-    v.draw(m)
+    v.draw(m, None, None)
