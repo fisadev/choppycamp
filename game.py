@@ -2,7 +2,7 @@ import random
 
 import click
 from constants import (ACTION_DELTAS, ACTIONS, CHOPP, LAPTOP, PLAYER_X,
-                       PLAYER_Y, PLAYERS, SCORE_THINGS, WALL)
+                       PLAYER_Y, PLAYERS, SCORE_THINGS, WALL, WON, TIE, LOST)
 from game.map_generator import generate
 from utils import find_thing, get_bot, position_in_map
 
@@ -52,7 +52,21 @@ class Game:
         return False
 
     def notify_results(self):
-        pass
+        x_score = self.scores[PLAYER_X]
+        y_score = self.scores[PLAYER_Y]
+
+        if x_score > y_score:
+            x_result = WON
+            y_result = LOST
+        elif x_score < y_score:
+            y_result = WON
+            x_result = LOST
+        else:
+            x_result = TIE
+            y_result = TIE
+
+        self.players[PLAYER_X].game_over(x_result, self.map, self.scores)
+        self.players[PLAYER_Y].game_over(y_result, self.map, self.scores)
 
     def step(self):
         actions = self.get_actions_from_players()
