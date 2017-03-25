@@ -2,7 +2,7 @@ import shutil
 import time
 import os
 
-from constants import PLAYER_X, PLAYER_Y, DANCE, UP
+from constants import PLAYER_X, PLAYER_Y, DANCE, REVERSE
 
 class MapVisualizer():
     def __init__(self, fps=3, dance_frames=4):
@@ -46,9 +46,9 @@ class MapVisualizer():
                             pass
 
                     if actions[PLAYER_X] == DANCE:
-                        map_matrix[xraw_index][xcol_index] = PLAYER_X.lower() if cycle % 2 else PLAYER_X.upper()
+                        map_matrix[xraw_index][xcol_index] = PLAYER_X if cycle % 2 else '{0}{1}'.format(REVERSE, PLAYER_X)
                     if actions[PLAYER_Y] == DANCE:
-                        map_matrix[yraw_index][ycol_index] = PLAYER_Y.lower() if cycle % 2 else PLAYER_Y.upper()
+                        map_matrix[yraw_index][ycol_index] = PLAYER_Y if cycle % 2 else '{0}{1}'.format(REVERSE, PLAYER_Y)
 
                     self.draw_matrix(map_matrix)
                     time.sleep(1 / self.fps)
