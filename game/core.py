@@ -64,12 +64,14 @@ class Game:
 
         self.players[PLAYER_X].game_over(x_result, self.map, self.scores)
         self.players[PLAYER_Y].game_over(y_result, self.map, self.scores)
+        if self.visualizer is not None:
+            self.visualizer.game_over(self.scores)
 
     def step(self):
         actions = self.get_actions_from_players()
         self.apply_actions(actions)
         if self.visualizer is not None:
-            self.visualizer.draw(self.map, self.scores)
+            self.visualizer.draw(self.map, actions, self.scores)
 
     def get_actions_from_players(self):
         actions = []
