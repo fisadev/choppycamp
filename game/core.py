@@ -27,11 +27,16 @@ class Game:
             if position_in_map(self.map, (new_r, new_c)):
                 target = self.map[new_r][new_c]
 
+                move = False
                 if target in SCORE_THINGS:
                     self.scores[player_id] += SCORE_THINGS[target]
+                    move = True
+                elif target == EMPTY:
+                    move = True
+
+                if move:
                     self.map[new_r][new_c] = player_id
-                elif target != EMPTY:
-                    self.map[new_r][new_c] = player_id
+                    self.map[player_r][player_c] = EMPTY
 
     def play(self):
         self.scores[PLAYER_X] = 0
