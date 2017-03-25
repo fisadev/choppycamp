@@ -10,7 +10,7 @@ from constants import PLAYER_X, PLAYER_Y, DANCE, UP
 class MapVisualizer():
     def __init__(self):
         self.max_cols, self.max_raws = shutil.get_terminal_size()
-    
+
     def check_map_size(self, map_matrix):
         if len(map_matrix) > self.max_raws:
             raise ValueError("Raw len {} > {}".format(len(map_matrix), self.max_raws))
@@ -23,7 +23,7 @@ class MapVisualizer():
         for raw in matrix:
             line = ''
             for tile in raw:
-                line = line + tile 
+                line = line + tile
             print(line)
 
     def draw(self, map_matrix, actions, score):
@@ -31,7 +31,7 @@ class MapVisualizer():
 
         os.system('clear')
         if actions is not None:
-            if actions[PLAYER_X] == DANCE or actions[PALYER_Y] == DANCE:
+            if actions[PLAYER_X] == DANCE or actions[PLAYER_Y] == DANCE:
                 for cycle in range(10):
                     for raw_index, raw in enumerate(map_matrix):
                         try:
@@ -88,4 +88,4 @@ if __name__ == '__main__':
     example_map = generate_raw_map(10, 10)
     map_visualizer.draw(example_map, None, None)
 
-    map_visualizer.draw(example_map, {PLAYER_X: DANCE, PLAYER_Y: DANCE}, None) 
+    map_visualizer.draw(example_map, {PLAYER_X: DANCE, PLAYER_Y: DANCE}, None)
