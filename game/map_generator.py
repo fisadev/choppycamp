@@ -31,10 +31,6 @@ def generate(width, height, box_density=0, chopp_density=0, laptop_density=0,
 
     # add boxes
     empty_pairs = list(itertools.product(range(1, width - 1), range(1, height - 1)))
-<<<<<<< HEAD
-
-=======
->>>>>>> 21ee8690aeff4b28d309eefdee2a91a6a889ce5f
     random.shuffle(empty_pairs)
 
     for _ in range(boxes):
