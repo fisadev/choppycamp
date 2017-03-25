@@ -32,14 +32,17 @@ class DrunkBot(BaseBot):
             chopp_distance = distance(chopp, position)
             if closest_chopp:
                 if chopp_distance < closest_chopp[1]:
-                    closest_chopp = [chopp, chopp_distance]
+                    next_step = utils.a_star(map_, position, chopp)
+                    if next_step != constants.DANCE:
+                        closest_chopp = [chopp, chopp_distance, next_step]
             else:
-                closest_chopp = [chopp, chopp_distance]
+                next_step = utils.a_star(map_, position, chopp)
+                closest_chopp = [chopp, chopp_distance, next_step]
 
         if closest_chopp:
             if distance(closest_chopp[0], position) == 1:
                 self.drunk = True
-            return utils.a_star(map_, position, closest_chopp[0])
+            return closest_chopp[2]
 
         else:
             return constants.DANCE

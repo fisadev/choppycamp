@@ -21,12 +21,15 @@ class NormalBot(BaseBot):
             objective_distance = distance(objective, position)
             if closest_objective:
                 if objective_distance < closest_objective[1]:
-                    closest_objective = [objective, objective_distance]
+                    next_step = utils.a_star(map_, position, objective)
+                    if next_step != constants.DANCE:
+                        closest_objective = [objective, objective_distance, next_step]
             else:
-                closest_objective = [objective, objective_distance]
+                next_step = utils.a_star(map_, position, objective)
+                closest_objective = [objective, objective_distance, next_step]
 
         if closest_objective:
-            return utils.a_star(map_, position, closest_objective[0])
+            return closest_objective[2]
 
         else:
             return constants.DANCE
