@@ -4,7 +4,7 @@ import random
 
 
 class RandomBot(BaseBot):
-    def _move(self):
+    def act(self, map_):
         return random.choice([
             constants.UP, constants.DOWN, constants.RIGHT, constants.LEFT, constants.DANCE
         ])
