@@ -23,7 +23,7 @@ def position_in_map(map_, position):
 
 def get_bot(bot_name, id_, other_player, map_):
     module = importlib.import_module('bots.%s' % bot_name)
-    bot = module.create_bot(map_, id_, other_player)
+    bot = module.create_bot(id_, map_, other_player)
     return bot
 
 
