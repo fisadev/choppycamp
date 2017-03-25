@@ -1,9 +1,7 @@
 import itertools
 import random
-import sys
-sys.path.append('../')
 
-import visualizer
+import game.visualizer
 import constants
 from utils import map_size
 
