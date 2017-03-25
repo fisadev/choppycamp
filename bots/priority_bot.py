@@ -29,7 +29,7 @@ class PriorityBot(BaseBot):
                 closest_lap = [lap, lap_distance]
 
         if closest_lap:
-            return utils._a_star(map_, position, closest_lap[0])
+            return utils.a_star(map_, position, closest_lap[0])
 
         closest_chopp = []
         for chopp in chopps:
@@ -41,7 +41,7 @@ class PriorityBot(BaseBot):
                 closest_chopp = [chopp, chopp_distance]
 
         if closest_chopp:
-            return utils._a_star(map_, position, closest_chopp[0])
+            return utils.a_star(map_, position, closest_chopp[0])
 
         else:
             return constants.DANCE

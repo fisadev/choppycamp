@@ -19,14 +19,14 @@ class NormalBot(BaseBot):
         closest_objective = []
         for objective in laps_and_chopps:
             objective_distance = distance(objective, position)
-            if clossest_objective:
-                if objective_distance < clossest_objective[1]:
-                    clossest_objective = [objective, objective_distance]
+            if closest_objective:
+                if objective_distance < closest_objective[1]:
+                    closest_objective = [objective, objective_distance]
             else:
-                clossest_objective = [objective, objective_distance]
+                closest_objective = [objective, objective_distance]
 
-        if clossest_objective:
-            return utils._a_star(map_, position, clossest_objective[0])
+        if closest_objective:
+            return utils.a_star(map_, position, closest_objective[0])
 
         else:
             return constants.DANCE

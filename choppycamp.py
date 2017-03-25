@@ -11,16 +11,21 @@ from game.visualizer import MapVisualizer
 @click.option('--max-turns', default=10, help='Max number of game turns.')
 @click.option('--player-x', default='random_bot', help='First player.')
 @click.option('--player-y', default='random_bot', help='Second player.')
-@click.option('--map_file', default=None, help='Map to play the game in.')
-@click.option('--map_width', default=35, help='Map width to be used in map generation.')
-@click.option('--map_height', default=20, help='Map height to be used in map generation.')
-def main(player_x, player_y, max_turns, map_file, map_width, map_height):
+@click.option('--map-file', default=None, help='Map to play the game in.')
+@click.option('--map-width', default=35, help='Map width to be used in map generation.')
+@click.option('--map-height', default=20, help='Map height to be used in map generation.')
+@click.option('--fps', default=3, help='Frames per second.')
+@click.option('--box-density', default=0.1, help='Density of beers in the map.')
+@click.option('--chopp-density', default=0.05, help='Density of chopps in the map.')
+@click.option('--laptop-density', default=0.01, help='Density of laptops in the map.')
+def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
+         box_density, chopp_density, laptop_density):
     if not map_file:
         map_ = generate(
             map_width, map_height,
-            box_density=0.1,
-            laptop_density=0.01,
-            chopp_density=0.05,
+            box_density=box_density,
+            chopp_density=chopp_density,
+            laptop_density=laptop_density,
         )
 
     add_things_randomly(
@@ -38,7 +43,7 @@ def main(player_x, player_y, max_turns, map_file, map_width, map_height):
         },
         max_turns=max_turns,
         map_=map_,
-        visualizer=MapVisualizer(),
+        visualizer=MapVisualizer(fps=fps),
     )
     game.play()
 
