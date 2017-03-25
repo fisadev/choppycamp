@@ -1,10 +1,21 @@
-EMPTY = '.'
-WALL = '#'
-ROOM = '@'
-CHOPP = 'U'
-LAPTOP = 'L'
-PLAYER_X = 'x'
-PLAYER_Y = 'y'
+CLEAR = '\033[0m'
+BOLD = '\033[1m'
+REVERSE = '\033[7m'
+
+RED = '\033[31m'
+BLUE = '\033[34m'
+YELLOW = '\033[93m'
+GREEN = '\033[32m'
+MAGENTA = '\033[35m'
+
+
+EMPTY = ' '
+WALL = '{0}#{1}'.format(MAGENTA, CLEAR)
+CHOPP = '{0}{1}U{2}'.format(BOLD, YELLOW, CLEAR)
+LAPTOP = '{0}{1}L{2}'.format(BOLD, BLUE, CLEAR)
+PLAYER_X = '{0}{1}x{2}'.format(BOLD, RED, CLEAR)
+PLAYER_Y = '{0}{1}y{2}'.format(BOLD, GREEN, CLEAR)
+ROOM = '{0}@{1}'.format(MAGENTA, CLEAR)
 
 UP = 'up'
 DOWN = 'down'
