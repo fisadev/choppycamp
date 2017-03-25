@@ -3,12 +3,13 @@ from bots.base_bot import BaseBot
 import random
 import utils
 
-class DrunkBot(BaseBot):
+class PriorityBot(BaseBot):
+    '''This bot try to find the laptops first, and then the chops'''
     def act(self, map_):
         chopps = []
         laps = []
-        position = self.position(map_)
-        for i_row, row in enumerate(self.map):
+        position = self._position(map_)
+        for i_row, row in enumerate(map_):
             for i_colum, slot in enumerate(row):
                 if slot == constants.CHOPP:
                     chopps.append((i_row, i_colum))
@@ -17,6 +18,18 @@ class DrunkBot(BaseBot):
 
         def distance(a, b):
             return sum([abs(a[i]-b[i]) for i in [0, 1]])
+
+        closest_lap = []
+        for lap in laps:
+            lap_distance = distance(lap, position)
+            if closest_lap:
+                if lap_distance < closest_lap[1]:
+                    closest_lap = [lap, lap_distance]
+            else:
+                closest_lap = [lap, lap_distance]
+
+        if closest_lap:
+            return utils._a_star(map_, position, closest_lap[0])
 
         closest_chopp = []
         for chopp in chopps:
@@ -35,4 +48,4 @@ class DrunkBot(BaseBot):
 
 
 def create_bot(id_, map_, other_player):
-    return DrunkBot(id_, map_, other_player)
+    return PriorityBot(id_, map_, other_player)
