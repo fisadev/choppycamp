@@ -23,9 +23,10 @@ from game.visualizer import MapVisualizer
 @click.option('--room-box-density', default=0.0, help='Density of beers in the room.')
 @click.option('--room-chopp-density', default=0.05, help='Density of chopps in the room.')
 @click.option('--room-laptop-density', default=0.71, help='Density of laptops in the room.')
+@click.option('--rooms', default=1, help='Number of rooms.')
 def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
          box_density, chopp_density, laptop_density, room_width, room_height,
-         room_box_density, room_chopp_density, room_laptop_density):
+         room_box_density, room_chopp_density, room_laptop_density, rooms):
     if not map_file:
         map_ = build_map(
             map_width, map_height,
@@ -35,7 +36,8 @@ def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
             laptop_density=laptop_density,
             room_box_density=room_box_density,
             room_chopp_density=room_chopp_density,
-            room_laptop_density=room_laptop_density
+            room_laptop_density=room_laptop_density,
+            rooms=rooms
         )
 
     add_things_randomly(

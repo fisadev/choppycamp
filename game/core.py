@@ -2,7 +2,7 @@ import random
 from copy import deepcopy
 
 from constants import (ACTION_DELTAS, LOST, PLAYER_X, PLAYER_Y, SCORE_THINGS,
-                       TIE, WON, EMPTY)
+                       TIE, WON, EMPTY, LAPTOP, CHOPP, DANCE, ACTIONS)
 from utils import find_thing, position_in_map
 
 
@@ -43,6 +43,12 @@ class Game:
                 if move:
                     self.map[new_r][new_c] = player_id
                     self.map[player_r][player_c] = EMPTY
+
+                    if target == LAPTOP:
+                        if self.nerd_factor:
+                            self.nerding[player_id] = random.randint(0, 5 + self.nerd_factor)
+                    elif target == CHOPP:
+                        self.drunkness[player_id] += 1
 
     def play(self):
         self.scores[PLAYER_X] = 0
@@ -89,8 +95,28 @@ class Game:
             self.visualizer.draw(deepcopy(self.map), actions, self.scores)
 
     def drunkify_action(self, player_id, action):
-        return action
+        player_drunkness = self.drunkness[player_id] * self.drunk_factor
+
+        if random.randint(0, 100) > player_drunkness:
+            return action
+
+        self.drunkness[player_id] -= 1
+        return random.choice(ACTIONS)
+
+    def nerdify_action(self, player_id, action):
+        if self.nerding[player_id]:
+            self.nerding[player_id] -= 1
+            return DANCE
+        else:
+            return action
 
     def get_actions_from_players(self):
-        return {player_id: player.act(deepcopy(self.map))
-                for player_id, player in self.players.items()}
+        actions = {}
+        for player_id, player in self.players.items():
+            action = player.act(deepcopy(self.map))
+            action = self.drunkify_action(player_id, action)
+            action = self.nerdify_action(player_id, action)
+
+            actions[player_id] = action
+
+        return actions

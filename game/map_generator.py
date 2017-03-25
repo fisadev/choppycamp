@@ -97,12 +97,15 @@ def add_room(current_map, room):
     return current_map
 
 
-def build_map(map_width, map_height, room_width, room_height, box_density, chopp_density, laptop_density,
-              room_box_density, room_chopp_density, room_laptop_density):
+def build_map(map_width, map_height, room_width, room_height,
+              box_density, chopp_density, laptop_density,
+              room_box_density, room_chopp_density, room_laptop_density, rooms):
     """Principal function used by the game, the rest should be private for this module."""
     m = generate(map_width, map_height, box_density, chopp_density, laptop_density)
     r = generate(room_width, room_height, room_box_density, room_chopp_density, room_laptop_density)
-    m = add_room(m, r)
+    for _ in range(rooms):
+        m = add_room(m, r)
+
     return m
 
 
