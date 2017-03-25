@@ -14,7 +14,8 @@ from game.visualizer import MapVisualizer
 @click.option('--map_file', default=None, help='Map to play the game in.')
 @click.option('--map_width', default=35, help='Map width to be used in map generation.')
 @click.option('--map_height', default=20, help='Map height to be used in map generation.')
-def main(player_x, player_y, max_turns, map_file, map_width, map_height):
+@click.option('--fps', default=3, help='Frames per second.')
+def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps):
     if not map_file:
         map_ = generate(
             map_width, map_height,
@@ -38,7 +39,7 @@ def main(player_x, player_y, max_turns, map_file, map_width, map_height):
         },
         max_turns=max_turns,
         map_=map_,
-        visualizer=MapVisualizer(),
+        visualizer=MapVisualizer(fps=fps),
     )
     game.play()
 
