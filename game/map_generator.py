@@ -54,6 +54,6 @@ def add_things_randomly(map_, quantities):
             row = random.randint(0, rows - 1)
             col = random.randint(0, columns - 1)
 
-            if not map_[row][col]:
+            if map_[row][col] == constants.EMPTY:
                 map_[row][col] = thing
                 added += 1
