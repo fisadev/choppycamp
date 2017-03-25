@@ -30,7 +30,7 @@ def a_star_calculate_h( from_coords, to_coords):
 
 
 def next_move(path):
-    if len(path) < 2:
+    if not path:
         return constants.DANCE
     return path[0]['action']
 
