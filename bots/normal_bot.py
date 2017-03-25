@@ -4,6 +4,7 @@ import random
 import utils
 
 class NormalBot(BaseBot):
+    '''This bot goes to the closer objective (chopp or laptop)'''
     def act(self, map_):
         laps_and_chopps = []
         position = self.position(map_)
