@@ -1,5 +1,5 @@
-import choppycamp.constants as constants
-from choppycamp.utils import find_thing, position_in_map
+import constants
+from utils import find_thing, position_in_map
 
 class BaseBot(object):
     def __init__(self, id_, map_=None, enemy=None):
@@ -8,36 +8,32 @@ class BaseBot(object):
         self.enemy = enemy
 
     def act(self, map_):
-        self.map = map_
-        return self._move()
-
-    def _move(self):
-        """Define behavior to do during your current turn."""
-
         return constants.DANCE
 
     def game_over(self, result, map_, scores):
         pass
 
-    def _position(self):
-        return find_thing(self.id)
+    def _position(self, map_):
+        return find_thing(map_, self.id)
 
-    def _a_star(self, to_point):
+    def _a_star(self, map_, to_point):
         closed_nodes = []
         processed = []
 
+        initial_position = self._position(map_)
+
         node_to_process = {
-            'coords': self._position(),
-            'tile': '',
+            'coords': initial_position,
+            'tile': constants.EMPTY,
             'g': 0,
-            'h': self._calculate_h(self._position(), to_point),
+            'h': self._calculate_h(initial_position, to_point),
             'points_to': None
         }
         node_to_process['F'] = node_to_process['g'] + node_to_process['h']
 
         while node_to_process['coords'] != to_point:
             closed_nodes.append(node_to_process)
-            self._proccess_adjacent(processed, node_to_process, to_point)
+            self._proccess_adjacent(map_, processed, node_to_process, to_point)
 
             node_to_process = self._next_node_to_process(processed)
         closed_nodes.append(node_to_process)
@@ -46,6 +42,7 @@ class BaseBot(object):
         return self._next_move(path)
 
     def _next_move(self, path):
+        import ipdb; ipdb.set_trace()
         if len(path) < 2:
             return constants.DANCE
 
@@ -67,22 +64,22 @@ class BaseBot(object):
         path = []
 
         node = closed_nodes.pop()
-        while node['points'] is not None:
+        while node['points_to'] is not None:
             path.append(node)
-            node = node['points']
+            node = node['points_to']
         path.append(node)
 
-        return reversed(path)
+        return list(reversed(path))
 
-    def _proccess_adjacent(self, processed, node_to_process, to_point):
-        for adjacent_node in self._get_adjacent_nodes(node_to_process):
+    def _proccess_adjacent(self, map_, processed, node_to_process, to_point):
+        for adjacent_node in self._get_adjacent_nodes(map_, node_to_process):
             adjacent_node['g'] = node_to_process['g'] + 1
             adjacent_node['h'] = self._calculate_h(adjacent_node['coords'], to_point)
             adjacent_node['F'] = adjacent_node['g'] + adjacent_node['h']
 
             processed.append(adjacent_node)
 
-    def _get_adjacent_nodes(self, node_to_process):
+    def _get_adjacent_nodes(self, map_, node_to_process):
         nodes = []
 
         for drow in [-1, 0, 1]:
@@ -92,8 +89,8 @@ class BaseBot(object):
 
                 row = node_to_process['coords'][0] + drow
                 column = node_to_process['coords'][1] + dcol
-                if position_in_map(row, column):
-                    tile = self.map[row][column]
+                if position_in_map(map_, (row, column)):
+                    tile = map_[row][column]
 
                     if self._is_walkable(tile):
                         nodes.append({
