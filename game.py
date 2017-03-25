@@ -1,11 +1,10 @@
 import random
 
 import click
-
-from constants import (PLAYERS, ACTIONS, ACTION_DELTAS, WALL, SCORE_THINGS,
-                       PLAYER_X, PLAYER_Y)
+from constants import (ACTION_DELTAS, ACTIONS, CHOPP, LAPTOP, PLAYER_X,
+                       PLAYER_Y, PLAYERS, SCORE_THINGS, WALL)
 from game.map_generator import generate
-from utils import find_thing, position_in_map, get_bot
+from utils import find_thing, get_bot, position_in_map
 
 
 class Game:
@@ -14,6 +13,7 @@ class Game:
         self.players = players
         self.visualizer = visualizer
         self.max_turns = max_turns
+        self.current_turn = None
 
         self.scores = {}
 
@@ -35,6 +35,23 @@ class Game:
                     self.map[new_r][new_c] = player_id
 
     def play(self):
+        self.current_turn = 0
+        while not self.game_finished():
+            self.step()
+            self.current_turn += 1
+        self.notify_results()
+
+    def game_finished(self):
+        return not(self.current_turn < self.max_turns and self.prizes_in_board())
+
+    def prizes_in_board(self):
+        for row in self.map_:
+            for value in row:
+                if value in (CHOPP, LAPTOP):
+                    return True
+        return False
+
+    def notify_results(self):
         pass
 
     def step(self):
@@ -62,8 +79,8 @@ def main(player_x, player_y, max_turns, visualizer, map_):
 
     game = Game(
         players={
-            PLAYER_X: get_bot(player_x, 'x', player_y, map_),
-            PLAYER_Y: get_bot(player_x, 'x', player_y, map_),
+            PLAYER_X: get_bot(player_x, PLAYER_X, player_y, map_),
+            PLAYER_Y: get_bot(player_y, PLAYER_Y, player_x, map_),
         },
         max_turns=max_turns,
         map_=map_,
