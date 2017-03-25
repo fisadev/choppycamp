@@ -9,7 +9,7 @@ class PriorityBot(BaseBot):
         chopps = []
         laps = []
         position = self._position(map_)
-        for i_row, row in enumerate(self.map):
+        for i_row, row in enumerate(map_):
             for i_colum, slot in enumerate(row):
                 if slot == constants.CHOPP:
                     chopps.append((i_row, i_colum))
