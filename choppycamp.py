@@ -1,7 +1,7 @@
 import click
 
 from constants import PLAYER_X, PLAYER_Y, CHOPP, LAPTOP
-from game.map_generator import generate, add_things_randomly
+from game.map_generator import build_map, add_things_randomly
 from game.core import Game
 from utils import get_bot
 from game.visualizer import MapVisualizer
@@ -18,14 +18,24 @@ from game.visualizer import MapVisualizer
 @click.option('--box-density', default=0.1, help='Density of beers in the map.')
 @click.option('--chopp-density', default=0.05, help='Density of chopps in the map.')
 @click.option('--laptop-density', default=0.01, help='Density of laptops in the map.')
+@click.option('--room-width', default=35, help='Map width to be used in room generation.')
+@click.option('--room-height', default=20, help='Map height to be used in room generation.')
+@click.option('--room-box-density', default=0.1, help='Density of beers in the room.')
+@click.option('--room-chopp-density', default=0.05, help='Density of chopps in the room.')
+@click.option('--room-laptop-density', default=0.01, help='Density of laptops in the room.')
 def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
-         box_density, chopp_density, laptop_density):
+         box_density, chopp_density, laptop_density, room_width, room_height,
+         room_box_density, room_chopp_density, room_laptop_density):
     if not map_file:
-        map_ = generate(
+        map_ = build_map(
             map_width, map_height,
+            room_width, room_height,
             box_density=box_density,
             chopp_density=chopp_density,
             laptop_density=laptop_density,
+            room_box_density=room_box_density,
+            room_chopp_density=room_chopp_density,
+            room_laptop_density=room_laptop_density
         )
 
     add_things_randomly(

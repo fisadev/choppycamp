@@ -1,7 +1,7 @@
 import itertools
 import random
 
-import game.visualizer
+from game import visualizer
 import constants
 from utils import map_size
 
@@ -74,7 +74,10 @@ def add_room(current_map, room):
     for row in room:
         for index, item in enumerate(row):
             current_map[init_y][init_x + index] = item
-            room_positions.append((init_x + index, init_y))
+
+            # keep track room wall positions
+            if item == constants.WALL:
+                room_positions.append((init_x + index, init_y))
         init_y += 1
 
     # crate door logic
@@ -82,20 +85,28 @@ def add_room(current_map, room):
     for _ in range(len(room_positions)):
         x, y = room_positions.pop(0)
 
-        if item == constants.ROOM:
-            available_top = current_map[y + 1][x] not in [constants.ROOM, constants.WALL]
-            available_bottom = current_map[y - 1][x] not in [constants.ROOM, constants.WALL]
-            available_left = current_map[y][x + 1] not in [constants.ROOM, constants.WALL]
-            available_right = current_map[y][x - 1] not in [constants.ROOM, constants.WALL]
-            if (all([available_top, available_bottom]) or all([available_left, available_right])):
-                current_map[y][x] = constants.EMPTY
-                break
+        available_top = current_map[y + 1][x] != constants.WALL
+        available_bottom = current_map[y - 1][x] != constants.WALL
+        available_left = current_map[y][x + 1] != constants.WALL
+        available_right = current_map[y][x - 1] != constants.WALL
+        if (all([available_top, available_bottom]) or all([available_left, available_right])):
+            current_map[y][x] = constants.EMPTY
+            break
     return current_map
 
 
-if __name__ == '__main__':
+def build_map(map_width, map_height, box_density, chopp_density, laptop_density,
+              room_width, room_height, room_box_density, room_chopp_density, room_laptop_density):
+    """Principal function used by the game, the rest should be private for this module."""
+    m = generate(map_width, map_height, box_density, chopp_density, laptop_density)
+    r = generate(room_width, room_height, room_box_density, room_chopp_density, room_laptop_density)
+    m = add_room(m, r)
+    return m
+
+
+def main():
     m = generate(50, 40, 0.01, 0.01, 0.05)
-    r = generate(8, 8, 0, 0.2, 0.4, representation=constants.ROOM)
+    r = generate(8, 8, 0, 0.2, 0.4)
     m = add_room(m, r)
     v = visualizer.MapVisualizer()
     v.draw(m, None, None)
