@@ -8,9 +8,11 @@ sys.path.append('../')
 from constants import PLAYER_X, PLAYER_Y, DANCE, UP
 
 class MapVisualizer():
-    def __init__(self):
+    def __init__(self, fps=3, dance_frames=4):
+        self.fps = fps
+        self.dance_frames = dance_frames
         self.max_cols, self.max_raws = shutil.get_terminal_size()
-    
+
     def check_map_size(self, map_matrix):
         if len(map_matrix) > self.max_raws:
             raise ValueError("Raw len {} > {}".format(len(map_matrix), self.max_raws))
@@ -23,7 +25,7 @@ class MapVisualizer():
         for raw in matrix:
             line = ''
             for tile in raw:
-                line = line + tile 
+                line = line + tile
             print(line)
 
     def draw(self, map_matrix, actions, score):
@@ -31,8 +33,8 @@ class MapVisualizer():
 
         os.system('clear')
         if actions is not None:
-            if actions[PLAYER_X] == DANCE or actions[PALYER_Y] == DANCE:
-                for cycle in range(10):
+            if actions[PLAYER_X] == DANCE or actions[PLAYER_Y] == DANCE:
+                for cycle in range(self.dance_frames):
                     for raw_index, raw in enumerate(map_matrix):
                         try:
                             xcol_index = raw.index(PLAYER_X)
@@ -52,10 +54,11 @@ class MapVisualizer():
                         map_matrix[yraw_index][ycol_index] = PLAYER_Y.lower() if cycle % 2 else PLAYER_Y.upper()
 
                     self.draw_matrix(map_matrix)
-                    time.sleep(0.5)
+                    time.sleep(1 / self.fps)
                     os.system('clear')
 
         self.draw_matrix(map_matrix)
+        time.sleep(1 / self.fps)
 
     def game_over(self, score):
         pass
@@ -88,4 +91,4 @@ if __name__ == '__main__':
     example_map = generate_raw_map(10, 10)
     map_visualizer.draw(example_map, None, None)
 
-    map_visualizer.draw(example_map, {PLAYER_X: DANCE, PLAYER_Y: DANCE}, None) 
+    map_visualizer.draw(example_map, {PLAYER_X: DANCE, PLAYER_Y: DANCE}, None)

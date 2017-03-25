@@ -1,6 +1,8 @@
 import random
+from copy import deepcopy
 
-from constants import (ACTION_DELTAS, LOST, PLAYER_X, PLAYER_Y, SCORE_THINGS, TIE, WON)
+from constants import (ACTION_DELTAS, LOST, PLAYER_X, PLAYER_Y, SCORE_THINGS,
+                       TIE, WON, EMPTY)
 from utils import find_thing, position_in_map
 
 
@@ -15,21 +17,27 @@ class Game:
         self.scores = {}
 
     def apply_actions(self, actions):
+        actions = list(actions.items())
         random.shuffle(actions)
 
         for player_id, action in actions:
-            player_r, player_c = find_thing(self.map_, player_id)
+            player_r, player_c = find_thing(self.map, player_id)
             delta_r, delta_c = ACTION_DELTAS[action]
             new_r, new_c = player_r + delta_r, player_c + delta_c
 
-            if position_in_map(self.map_, (new_r, new_c)):
+            if position_in_map(self.map, (new_r, new_c)):
                 target = self.map[new_r][new_c]
 
+                move = False
                 if target in SCORE_THINGS:
                     self.scores[player_id] += SCORE_THINGS[target]
+                    move = True
+                elif target == EMPTY:
+                    move = True
+
+                if move:
                     self.map[new_r][new_c] = player_id
-                elif not target:
-                    self.map[new_r][new_c] = player_id
+                    self.map[player_r][player_c] = EMPTY
 
     def play(self):
         self.scores[PLAYER_X] = 0
@@ -73,10 +81,8 @@ class Game:
         actions = self.get_actions_from_players()
         self.apply_actions(actions)
         if self.visualizer is not None:
-            self.visualizer.draw(self.map, actions, self.scores)
+            self.visualizer.draw(deepcopy(self.map), actions, self.scores)
 
     def get_actions_from_players(self):
-        actions = []
-        for player_name, player in self.players.items():
-            actions.append(player_name, player.act(self.map))
-        return actions
+        return {player_id: player.act(deepcopy(self.map))
+                for player_id, player in self.players.items()}
