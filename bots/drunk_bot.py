@@ -7,7 +7,7 @@ class DrunkBot(BaseBot):
     def act(self, map_):
         chopps = []
         laps = []
-        position = self.position(map_)
+        position = self._position(map_)
         for i_row, row in enumerate(self.map):
             for i_colum, slot in enumerate(row):
                 if slot == constants.CHOPP:
