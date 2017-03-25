@@ -1,5 +1,6 @@
-import choppycamp.constants as constants
-from choppycamp.utils import find_thing, position_in_map
+import constants as constants
+from utils import find_thing, position_in_map
+
 
 class BaseBot(object):
     def __init__(self, id_, map_=None, enemy=None):
