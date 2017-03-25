@@ -7,14 +7,19 @@ from utils import find_thing, position_in_map
 
 
 class Game:
-    def __init__(self, players, max_turns, map_, visualizer=None):
+    def __init__(self, players, max_turns, map_, drunk_factor=1, nerd_factor=1,
+                 visualizer=None):
         self.map = map_
         self.players = players
         self.visualizer = visualizer
         self.max_turns = max_turns
         self.current_turn = None
+        self.drunk_factor = drunk_factor
+        self.nerd_factor = nerd_factor
 
         self.scores = {}
+        self.drunkness = {PLAYER_X: 0, PLAYER_Y: 0}
+        self.nerding = {PLAYER_X: 0, PLAYER_Y: 0}
 
     def apply_actions(self, actions):
         actions = list(actions.items())
@@ -82,6 +87,9 @@ class Game:
         self.apply_actions(actions)
         if self.visualizer is not None:
             self.visualizer.draw(deepcopy(self.map), actions, self.scores)
+
+    def drunkify_action(self, player_id, action):
+        return action
 
     def get_actions_from_players(self):
         return {player_id: player.act(deepcopy(self.map))
