@@ -1,0 +1,5 @@
+PARED = '#'
+BIRRA = 'i'
+LAPTOP = 'L'
+PTYHONISTA1 = 'x'
+PYTHONISTA2 = 'y'
