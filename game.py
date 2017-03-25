@@ -42,12 +42,12 @@ class Game:
         self.notify_results()
 
     def game_finished(self):
-        return not(self.current_turn < self.max_turns and self.prizes_in_board())
+        return not (self.current_turn < self.max_turns and self.prizes_in_board())
 
     def prizes_in_board(self):
         for row in self.map_:
             for value in row:
-                if value in (CHOPP, LAPTOP):
+                if value in SCORE_THINGS:
                     return True
         return False
 
@@ -59,8 +59,8 @@ class Game:
             x_result = WON
             y_result = LOST
         elif x_score < y_score:
-            y_result = WON
             x_result = LOST
+            y_result = WON
         else:
             x_result = TIE
             y_result = TIE
