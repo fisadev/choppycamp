@@ -1,4 +1,4 @@
-import rnadom
+import random
 
 import click
 
@@ -19,11 +19,11 @@ class Game:
         random.shuffle(actions)
 
         for player_id, action in actions:
-            player_r, player_c = find_thing(map_, player_id)
+            player_r, player_c = find_thing(self.map_, player_id)
             delta_r, delta_c = ACTION_DELTAS[action]
             new_r, new_c = player_r + delta_r, player_c + delta_c
 
-            if position_in_map(map_, (new_r, new_c)):
+            if position_in_map(self.map_, (new_r, new_c)):
                 target = self.map[new_r][new_c]
 
                 if target in SCORE_THINGS:
@@ -43,8 +43,8 @@ class Game:
 
     def get_actions_from_players(self):
         actions = []
-        for player in self.players:
-            actions.append(player, player.act(self.map))
+        for player_name, player in self.players.items():
+            actions.append(player_name, player.act(self.map))
         return actions
 
 
