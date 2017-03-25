@@ -7,8 +7,8 @@ class NormalBot(BaseBot):
     '''This bot goes to the closer objective (chopp or laptop)'''
     def act(self, map_):
         laps_and_chopps = []
-        position = self.position(map_)
-        for i_row, row in enumerate(self.map):
+        position = self._position(map_)
+        for i_row, row in enumerate(map_):
             for i_colum, slot in enumerate(row):
                 if slot in constants.SCORE_THINGS:
                     laps_and_chopps.append((i_row, i_colum))
