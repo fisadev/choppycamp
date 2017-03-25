@@ -69,11 +69,27 @@ def add_room(current_map, room):
     init_x = random.randint(0, map_width - room_width)
     init_y = random.randint(0, map_height - room_height)
 
+    # inserting room into main map here
+    room_positions = []
     for row in room:
         for index, item in enumerate(row):
             current_map[init_y][init_x + index] = item
+            room_positions.append((init_x + index, init_y))
         init_y += 1
 
+    # crate door logic
+    random.shuffle(room_positions)
+    for _ in range(len(room_positions)):
+        x, y = room_positions.pop(0)
+
+        if item == constants.ROOM:
+            available_top = current_map[y + 1][x] not in [constants.ROOM, constants.WALL]
+            available_bottom = current_map[y - 1][x] not in [constants.ROOM, constants.WALL]
+            available_left = current_map[y][x + 1] not in [constants.ROOM, constants.WALL]
+            available_right = current_map[y][x - 1] not in [constants.ROOM, constants.WALL]
+            if (all([available_top, available_bottom]) or all([available_left, available_right])):
+                current_map[y][x] = constants.EMPTY
+                break
     return current_map
 
 
