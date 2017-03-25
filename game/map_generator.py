@@ -4,6 +4,7 @@ import sys
 sys.path.append('../')
 
 import constants
+from utils import map_size
 
 
 def generate(width, height, box_density=0, chopp_density=0, laptop_density=0):
@@ -27,7 +28,6 @@ def generate(width, height, box_density=0, chopp_density=0, laptop_density=0):
 
     # add boxes
     empty_pairs = list(itertools.product(range(1, width - 1), range(1, height - 1)))
-    print(len(empty_pairs), empty_pairs)
     random.shuffle(empty_pairs)
 
     for _ in range(boxes):
@@ -43,3 +43,17 @@ def generate(width, height, box_density=0, chopp_density=0, laptop_density=0):
         matrix[pair[1]][pair[0]] = constants.LAPTOP
 
     return matrix
+
+
+def add_things_randomly(map_, quantities):
+    rows, columns = map_size(map_)
+
+    for thing, quantity in quantities.items():
+        added = 0
+        while added < quantity:
+            row = random.randint(0, rows - 1)
+            col = random.randint(0, columns - 1)
+
+            if not map_[row][col]:
+                map_[row][col] = thing
+                added += 1
