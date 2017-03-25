@@ -1,4 +1,5 @@
 import random
+from copy import deepcopy
 
 from constants import (ACTION_DELTAS, LOST, PLAYER_X, PLAYER_Y, SCORE_THINGS,
                        TIE, WON, EMPTY)
@@ -80,8 +81,8 @@ class Game:
         actions = self.get_actions_from_players()
         self.apply_actions(actions)
         if self.visualizer is not None:
-            self.visualizer.draw(self.map, actions, self.scores)
+            self.visualizer.draw(deepcopy(self.map), actions, self.scores)
 
     def get_actions_from_players(self):
-        return {player_id: player.act(self.map)
+        return {player_id: player.act(deepcopy(self.map))
                 for player_id, player in self.players.items()}
