@@ -75,13 +75,22 @@ def already_visited(closed_nodes, coords):
 
 
 def is_walkable(tile):
-    return tile not in [
+    return tile not in (
         constants.WALL_VERTICAL,
         constants.WALL_HORIZONTAL,
         constants.BOX,
         constants.PLAYER_X,
         constants.PLAYER_Y
-    ]
+    )
+
+
+def is_valid_position(current_map, position_x, position_y):
+    try:
+        current_map[position_x][position_y]
+    except IndexError:
+        return False
+    else:
+        return True
 
 
 def get_adjacent_nodes(map_, closed_nodes, node_to_process):

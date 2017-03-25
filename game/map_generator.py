@@ -3,7 +3,7 @@ import random
 
 from game import visualizer
 import constants
-from utils import map_size, is_walkable
+from utils import map_size, is_valid_position, is_walkable
 
 
 def generate(width, height, box_density=0, chopp_density=0, laptop_density=0):
@@ -87,10 +87,15 @@ def add_room(current_map, room):
     for _ in range(len(room_positions)):
         x, y = room_positions.pop(0)
 
-        available_top = is_walkable(current_map[y + 1][x])
-        available_bottom = is_walkable(current_map[y - 1][x])
-        available_left = is_walkable(current_map[y][x + 1])
-        available_right = is_walkable(current_map[y][x - 1])
+        available_top = is_valid_position(current_map, y + 1, x) and \
+            is_walkable(current_map[y + 1][x])
+        available_bottom = is_valid_position(current_map, y - 1, x) and \
+            is_walkable(current_map[y - 1][x])
+        available_left = is_valid_position(current_map, y, x + 1) and \
+            is_walkable(current_map[y][x + 1])
+        available_right = is_valid_position(current_map, y, x - 1) and \
+            is_walkable(current_map[y][x - 1])
+
         if (all([available_top, available_bottom]) or all([available_left, available_right])):
             current_map[y][x] = constants.EMPTY
             break
