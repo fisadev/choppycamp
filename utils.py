@@ -76,7 +76,8 @@ def already_visited(closed_nodes, coords):
 
 def is_walkable(tile):
     return tile not in [
-        constants.WALL,
+        constants.WALL_VERTICAL,
+        constants.WALL_HORIZONTAL,
         constants.BOX,
         constants.PLAYER_X,
         constants.PLAYER_Y

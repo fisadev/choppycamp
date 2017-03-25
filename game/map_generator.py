@@ -6,8 +6,7 @@ import constants
 from utils import map_size, is_walkable
 
 
-def generate(width, height, box_density=0, chopp_density=0, laptop_density=0,
-             representation=constants.WALL):
+def generate(width, height, box_density=0, chopp_density=0, laptop_density=0):
 
     if (box_density + chopp_density + laptop_density) >= 1:
         raise ValueError('Density <= 1')
@@ -19,11 +18,14 @@ def generate(width, height, box_density=0, chopp_density=0, laptop_density=0,
     laptop = int((width - 2) * (height - 2) * laptop_density)
 
     # matrix width lines
-    matrix = [[representation if i in (0, width - 1) else constants.EMPTY for i in range(width)]
+    # WALL_VERTICAL
+
+    matrix = [[constants.WALL_VERTICAL if i in (0, width - 1) else constants.EMPTY
+              for i in range(width)]
               for i in range(height)]
 
     # fill first and last with walls
-    full_line = [representation]*width
+    full_line = [constants.WALL_HORIZONTAL]*width
     matrix[0] = full_line
     matrix[height-1] = full_line
 
@@ -76,7 +78,7 @@ def add_room(current_map, room):
             current_map[init_y][init_x + index] = item
 
             # keep track room wall positions
-            if item == constants.WALL:
+            if item in [constants.WALL_HORIZONTAL, constants.WALL_VERTICAL]:
                 room_positions.append((init_x + index, init_y))
         init_y += 1
 
