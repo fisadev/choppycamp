@@ -1,7 +1,7 @@
 WALL = '#'
 CHOPP = 'i'
 LAPTOP = 'L'
-PTYHONISTA1 = 'x'
+PYTHONISTA1 = 'x'
 PYTHONISTA2 = 'y'
 
 UP = 'up'
