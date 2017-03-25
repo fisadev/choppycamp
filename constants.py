@@ -1,8 +1,9 @@
+EMPTY = '.'
 WALL = '#'
-CHOPP = 'i'
+CHOPP = 'U'
 LAPTOP = 'L'
-PYTHONISTA1 = 'x'
-PYTHONISTA2 = 'y'
+PLAYER_X = 'x'
+PLAYER_Y = 'y'
 
 UP = 'up'
 DOWN = 'down'
@@ -12,7 +13,8 @@ DANCE = 'dance'
 
 ACTIONS = UP, DOWN, LEFT, RIGHT, DANCE
 
-PLAYERS = PYTHONISTA1, PYTHONISTA2
+PLAYERS = PLAYER_X, PLAYER_Y
+
 SCORE_THINGS = {
     CHOPP: 1,
     LAPTOP: 5,

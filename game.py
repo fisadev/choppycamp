@@ -1,9 +1,11 @@
-import rnadom
+import random
 
 import click
 
-from constants import PLAYERS, ACTIONS, ACTION_DELTAS, WALL, SCORE_THINGS
-from utils import find_thing, position_in_map
+from constants import (PLAYERS, ACTIONS, ACTION_DELTAS, WALL, SCORE_THINGS,
+                       PLAYER_X, PLAYER_Y)
+from game.map_generator import generate
+from utils import find_thing, position_in_map, get_bot
 
 
 class Game:
@@ -19,11 +21,11 @@ class Game:
         random.shuffle(actions)
 
         for player_id, action in actions:
-            player_r, player_c = find_thing(map_, player_id)
+            player_r, player_c = find_thing(self.map_, player_id)
             delta_r, delta_c = ACTION_DELTAS[action]
             new_r, new_c = player_r + delta_r, player_c + delta_c
 
-            if position_in_map(map_, (new_r, new_c)):
+            if position_in_map(self.map_, (new_r, new_c)):
                 target = self.map[new_r][new_c]
 
                 if target in SCORE_THINGS:
@@ -43,14 +45,30 @@ class Game:
 
     def get_actions_from_players(self):
         actions = []
-        for player in self.players:
-            actions.append(player, player.act(self.map))
+        for player_name, player in self.players.items():
+            actions.append(player_name, player.act(self.map))
         return actions
 
 
 @click.command()
-def main():
-    game = Game([])
+@click.option('--max-turns', default=10, help='Max number of game turns.')
+@click.option('--player-x', default='random', help='First player.')
+@click.option('--player-y', default='random', help='Second player.')
+@click.option('--visualizer', default=True, help='Use visualization or not.')
+@click.option('--map', default=None, help='Map to play the game in.')
+def main(player_x, player_y, max_turns, visualizer, map_):
+    if not map_:
+        map_ = generate()
+
+    game = Game(
+        players={
+            PLAYER_X: get_bot(player_x, 'x', player_y, map_),
+            PLAYER_Y: get_bot(player_x, 'x', player_y, map_),
+        },
+        max_turns=max_turns,
+        map_=map_,
+        visualizer=None,
+    )
     game.play()
 
 
