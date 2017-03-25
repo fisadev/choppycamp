@@ -11,8 +11,8 @@ MAGENTA = '\033[35m'
 
 
 EMPTY = ' '
-WALL_VERTICAL = '{0}|{1}'.format(MAGENTA, CLEAR)
-WALL_HORIZONTAL = '{0}-{1}'.format(MAGENTA, CLEAR)
+WALL_VERTICAL = '{0}\u2588{1}'.format(MAGENTA, CLEAR)
+WALL_HORIZONTAL = '{0}\u2588{1}'.format(MAGENTA, CLEAR)
 BOX = '{0}{1}\u2588{2}'.format(MAGENTA, DIM, CLEAR)
 CHOPP = '{0}{1}U{2}'.format(BOLD, YELLOW, CLEAR)
 LAPTOP = '{0}{1}L{2}'.format(BOLD, BLUE, CLEAR)
