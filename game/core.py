@@ -32,6 +32,8 @@ class Game:
                     self.map[new_r][new_c] = player_id
 
     def play(self):
+        self.scores[PLAYER_X] = 0
+        self.scores[PLAYER_Y] = 0
         self.current_turn = 0
         while not self.game_finished():
             self.step()
@@ -42,7 +44,7 @@ class Game:
         return not (self.current_turn < self.max_turns and self.prizes_in_board())
 
     def prizes_in_board(self):
-        for row in self.map_:
+        for row in self.map:
             for value in row:
                 if value in SCORE_THINGS:
                     return True
