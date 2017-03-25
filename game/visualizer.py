@@ -2,9 +2,6 @@ import shutil
 import time
 import os
 
-import sys
-sys.path.append('../')
-
 from constants import PLAYER_X, PLAYER_Y, DANCE, UP
 
 class MapVisualizer():
