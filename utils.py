@@ -61,6 +61,9 @@ def proccess_adjacent(map_, pending_nodes, closed_nodes, node_to_process, to_poi
         adjacent_node['h'] = a_star_calculate_h(adjacent_node['coords'], to_point)
         adjacent_node['F'] = adjacent_node['g'] + adjacent_node['h']
 
+        if already_visited(pending_nodes, adjacent_node['coords']):
+            continue
+
         pending_nodes.append(adjacent_node)
 
 
