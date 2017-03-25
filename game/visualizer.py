@@ -8,7 +8,8 @@ sys.path.append('../')
 from constants import PLAYER_X, PLAYER_Y, DANCE, UP
 
 class MapVisualizer():
-    def __init__(self):
+    def __init__(self, fps=3):
+        self.fps = fps
         self.max_cols, self.max_raws = shutil.get_terminal_size()
 
     def check_map_size(self, map_matrix):
@@ -56,6 +57,7 @@ class MapVisualizer():
                     os.system('clear')
 
         self.draw_matrix(map_matrix)
+        time.sleep(1 / self.fps)
 
     def game_over(self, score):
         pass
