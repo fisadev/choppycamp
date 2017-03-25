@@ -92,16 +92,18 @@ def get_adjacent_nodes(map_, closed_nodes, node_to_process):
         if already_visited(closed_nodes, (row, column)):
             continue
 
-        if position_in_map(map_, (row, column)):
-            tile = map_[row][column]
+        if not position_in_map(map_, (row, column)):
+            continue
 
-            if is_walkable(tile):
-                nodes.append({
-                    'coords': (row, column),
-                    'tile': tile,
-                    'points_to': node_to_process,
-                    'action': action
-                })
+        tile = map_[row][column]
+
+        if is_walkable(tile):
+            nodes.append({
+                'coords': (row, column),
+                'tile': tile,
+                'points_to': node_to_process,
+                'action': action
+            })
 
     return nodes
 
