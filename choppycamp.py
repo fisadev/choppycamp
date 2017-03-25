@@ -18,11 +18,11 @@ from game.visualizer import MapVisualizer
 @click.option('--box-density', default=0.1, help='Density of beers in the map.')
 @click.option('--chopp-density', default=0.05, help='Density of chopps in the map.')
 @click.option('--laptop-density', default=0.01, help='Density of laptops in the map.')
-@click.option('--room-width', default=35, help='Map width to be used in room generation.')
-@click.option('--room-height', default=20, help='Map height to be used in room generation.')
-@click.option('--room-box-density', default=0.1, help='Density of beers in the room.')
+@click.option('--room-width', default=5, help='Map width to be used in room generation.')
+@click.option('--room-height', default=5, help='Map height to be used in room generation.')
+@click.option('--room-box-density', default=0.0, help='Density of beers in the room.')
 @click.option('--room-chopp-density', default=0.05, help='Density of chopps in the room.')
-@click.option('--room-laptop-density', default=0.01, help='Density of laptops in the room.')
+@click.option('--room-laptop-density', default=0.71, help='Density of laptops in the room.')
 def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
          box_density, chopp_density, laptop_density, room_width, room_height,
          room_box_density, room_chopp_density, room_laptop_density):

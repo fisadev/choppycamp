@@ -33,7 +33,7 @@ def generate(width, height, box_density=0, chopp_density=0, laptop_density=0,
 
     for _ in range(boxes):
         pair = empty_pairs.pop(0)
-        matrix[pair[1]][pair[0]] = representation
+        matrix[pair[1]][pair[0]] = constants.BOX
 
     for _ in range(chopp):
         pair = empty_pairs.pop(0)
@@ -95,8 +95,8 @@ def add_room(current_map, room):
     return current_map
 
 
-def build_map(map_width, map_height, box_density, chopp_density, laptop_density,
-              room_width, room_height, room_box_density, room_chopp_density, room_laptop_density):
+def build_map(map_width, map_height, room_width, room_height, box_density, chopp_density, laptop_density,
+              room_box_density, room_chopp_density, room_laptop_density):
     """Principal function used by the game, the rest should be private for this module."""
     m = generate(map_width, map_height, box_density, chopp_density, laptop_density)
     r = generate(room_width, room_height, room_box_density, room_chopp_density, room_laptop_density)
