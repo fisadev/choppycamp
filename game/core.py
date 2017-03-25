@@ -46,7 +46,7 @@ class Game:
 
                     if target == LAPTOP:
                         if self.nerd_factor:
-                            self.nerding[player_id] = random.randint(0, 5 + nerd_factor)
+                            self.nerding[player_id] = random.randint(0, 5 + self.nerd_factor)
                     elif target == CHOPP:
                         self.drunkness[player_id] += 1
 
@@ -97,7 +97,7 @@ class Game:
     def drunkify_action(self, player_id, action):
         player_drunkness = self.drunkness[player_id] * self.drunk_factor
 
-        if random.randint(100) > player_drunkness:
+        if random.randint(0, 100) > player_drunkness:
             return action
 
         self.drunkness[player_id] -= 1
@@ -116,5 +116,7 @@ class Game:
             action = player.act(deepcopy(self.map))
             action = self.drunkify_action(player_id, action)
             action = self.nerdify_action(player_id, action)
+
+            actions[player_id] = action
 
         return actions
