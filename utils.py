@@ -11,9 +11,14 @@ def find_thing(map_, target):
     raise ValueError('Target not found: ' + target)
 
 
+def map_size(map_):
+    return len(map_), len(map_[0])
+
+
 def position_in_map(map_, position):
     row, col = position
-    return 0 <= row <= len(map_) and 0 <= col <= len(map_[0])
+    rows, columns = map_size(map_)
+    return 0 <= row < rows and 0 <= col < columns
 
 
 def get_bot(bot_name, id_, other_player, map_):
