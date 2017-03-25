@@ -1,5 +1,6 @@
 EMPTY = '.'
 WALL = '#'
+ROOM = '@'
 CHOPP = 'U'
 LAPTOP = 'L'
 PLAYER_X = 'x'
