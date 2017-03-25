@@ -1,5 +1,5 @@
 WALL = '#'
-CHOPP = 'i'
+CHOPP = 'U'
 LAPTOP = 'L'
 PYTHONISTA1 = 'x'
 PYTHONISTA2 = 'y'
@@ -8,6 +8,7 @@ UP = 'up'
 DOWN = 'down'
 LEFT = 'left'
 RIGHT = 'right'
+EMPTY = '.'
 
 ACTIONS = UP, DOWN, LEFT, RIGHT
 PLAYERS = PYTHONISTA1, PYTHONISTA2
