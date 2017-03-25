@@ -4,7 +4,16 @@ import random
 import utils
 
 class DrunkBot(BaseBot):
+
+    def __init__(self, id_, map_=None, enemy=None):
+        super(DrunkBot, self).__init__(id_, map_, enemy)
+        self.drunk = False
+
     def act(self, map_):
+        if self.drunk:
+            self.drunk = False
+            return constants.DANCE
+
         chopps = []
         laps = []
         position = self._position(map_)
@@ -28,6 +37,8 @@ class DrunkBot(BaseBot):
                 closest_chopp = [chopp, chopp_distance]
 
         if closest_chopp:
+            if distance(closest_chopp[0], position) == 1:
+                self.drunk = True
             return utils.a_star(map_, position, closest_chopp[0])
 
         else:
