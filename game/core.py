@@ -2,7 +2,7 @@ import random
 from copy import deepcopy
 
 from constants import (ACTION_DELTAS, LOST, PLAYER_X, PLAYER_Y, SCORE_THINGS,
-                       TIE, WON, EMPTY, LAPTOP, CHOPP, DANCE)
+                       TIE, WON, EMPTY, LAPTOP, CHOPP, DANCE, ACTIONS)
 from utils import find_thing, position_in_map
 
 
@@ -95,7 +95,13 @@ class Game:
             self.visualizer.draw(deepcopy(self.map), actions, self.scores)
 
     def drunkify_action(self, player_id, action):
-        return action
+        player_drunkness = self.drunkness[player_id] * self.drunk_factor
+
+        if random.randint(100) > player_drunkness:
+            return action
+
+        self.drunkness[player_id] -= 1
+        return random.choice(ACTIONS)
 
     def nerdify_action(self, player_id, action):
         if self.nerding[player_id]:
