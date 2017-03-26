@@ -14,7 +14,8 @@ from game.visualizer import MapVisualizer
 @click.option('--map-file', default=None, help='Map to play the game in.')
 @click.option('--map-width', default=35, help='Map width to be used in map generation.')
 @click.option('--map-height', default=20, help='Map height to be used in map generation.')
-@click.option('--fps', default=3, help='Frames per second.')
+@click.option('--fps', default=10, help='Frames per second.')
+@click.option('--dance-frames', default=2, help='Number of dance frames.')
 @click.option('--box-density', default=0.1, help='Density of beers in the map.')
 @click.option('--chopp-density', default=0.05, help='Density of chopps in the map.')
 @click.option('--laptop-density', default=0.01, help='Density of laptops in the map.')
@@ -29,7 +30,7 @@ from game.visualizer import MapVisualizer
 def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
          box_density, chopp_density, laptop_density, room_width, room_height,
          room_box_density, room_chopp_density, room_laptop_density, rooms,
-         drunk_factor, nerd_factor):
+         drunk_factor, nerd_factor, dance_frames):
     if not map_file:
         map_ = build_map(
             map_width, map_height,
@@ -58,7 +59,7 @@ def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
         },
         max_turns=max_turns,
         map_=map_,
-        visualizer=MapVisualizer(map_, fps=fps),
+        visualizer=MapVisualizer(map_, fps=fps, dance_frames=dance_frames),
         drunk_factor=drunk_factor,
         nerd_factor=nerd_factor,
     )
