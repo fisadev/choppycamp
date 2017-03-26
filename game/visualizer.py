@@ -9,145 +9,225 @@ sys.path.append('../')
 
 from constants import PLAYER_X, PLAYER_Y, DANCE, UP, REVERSE
 
+CENTER = 'center'
+LEFT = 'left'
+RIGHT = 'right'
+
+
+class Box():
+    def __init__(self, width, height, border='*', empty=' '):
+        self.width = width
+        self.height = height
+        self.empty = empty
+        self.border = border
+        self.clean()
+
+    def clean(self):
+        self.matrix = [[self.empty for _ in range(self.width)] for _ in range(self.height)]
+        self.matrix[0] = [self.border for _ in range(self.width)]
+        self.matrix[-1] = [self.border for _ in range(self.width)]
+        for row in range(self.height):
+            self.matrix[row][0] = self.border
+            self.matrix[row][-1] = self.border
+
+    def random(self):
+        printables = string.printable[:-5]
+        for row in range(self.height):
+            for col in range(self.width):
+                self.matrix[row][col] = printables[random.randint(0, len(printables)-1)]
+
+    def get_center(self):
+        return int(self.width/2), int(self.height/2)
+
+    def put_text(self, col, row, text, align=CENTER):
+        text_len = len(text)
+
+        if align == CENTER:
+            col -= int(text_len/2)
+        elif align == RIGHT:
+            col -= text_len
+
+        if col < 0:
+            raise ValueError("Col out of range %r" % col)
+
+        for index in range(text_len):
+            self.matrix[row][col + index] = text[index]
+
+    def put_box(self, col, row, box, align=CENTER):
+
+        if align == CENTER:
+            col -= int(box.width/2)
+            row -= int(box.height/2)
+        elif align == RIGHT:
+            col -= box.width
+            row -= box.height
+
+        if col < 0:
+            raise ValueError("Col out of range %r" % col)
+        if row < 0:
+            raise ValueError("Row out of range %r" % row)
+
+        for col_index in range(box.width):
+            for row_index in range(box.height):
+                self.matrix[row + row_index][col + col_index] = box.matrix[row_index][col_index]
+
+
+class PlayerScoreBoard(Box):
+    def __init__(self, width, height, player_name):
+        super(PlayerScoreBoard, self).__init__(width, height, '%')
+        self.player_name = player_name 
+        self.update(0, 0, 0)
+
+    def update(self, score, drunknes, nerdnes):
+        self.clean()
+        col, row = self.get_center()
+        self.put_text(col, 3, self.player_name, align=CENTER)
+        self.put_text(col, 5, 'Score: ' + str(score), align=CENTER)
+        self.put_text(col, 6, 'Drunknes: ' + str(drunknes), align=CENTER)
+        self.put_text(col, 7, 'Nerdnes: ' + str(nerdnes), align=CENTER)
+
+
 class Window():
     def __init__(self):
-        self.max_cols, self.max_raws = shutil.get_terminal_size()
-        self.max_raws -= 2
+        self.max_cols, self.max_rows = shutil.get_terminal_size()
+        self.max_rows -= 2
         self.max_cols -= 2
 
-        if self.max_cols < 50 or self.max_raws < 30:
-            raise ValueError("Console too small {}x{}".format(self.max_raws, self.max_cols))
+        if self.max_cols < 50 or self.max_rows < 30:
+            raise ValueError("Console too small {}x{}".format(self.max_rows, self.max_cols))
 
-        self.cols_center = int(self.max_cols/2)
-        self.raws_center = int(self.max_raws/2)
-
-        self.clean_screen()
+        self.frame = Box(self.max_cols, self.max_rows, border=' ')
 
     def clean_screen(self):
-        self.matrix = [[' ' for _ in range(self.max_cols)] for _ in range(self.max_raws)]
+        self.frame.clean()
+        self.update()
 
-    def welcome_screen(self):
-        printables = string.printable[:-5]
-        for raw in range(len(self.matrix)):
-            for col in range(len(self.matrix[0])):
-                self.matrix[raw][col] = printables[random.randint(0, len(printables)-1)]
+    def welcome_screen(self, title="Choppy by PyCamp 2017"):
+        self.frame.random()
+        text_box = Box(len(title) + 4, 5, border=' ')
+        text_box.clean()
+        col, row = text_box.get_center()
+        text_box.put_text(col, row, title, align=CENTER)
 
-        title = "Choppy by PyCamp 2017"
+        col, row = self.frame.get_center()
+        self.frame.put_box(col, row, text_box)
 
-        for i in range(self.cols_center - int(len(title)/2) - 3, self.cols_center +
-                int(len(title)/2) + 3):
-            self.matrix[self.raws_center - 1][i] = ' '
-            self.matrix[self.raws_center][i] = ('   ' + title + '   ')[i - self.cols_center - int(len(title)/2) - 3] 
-            self.matrix[self.raws_center + 1][i] = ' '
+        self.update()
 
-    def init_score(self):
-        self.matrix[0] = ['*' for _ in range(len(self.matrix[0]))]
-        self.matrix[1] = ['*' for _ in range(len(self.matrix[0]))]
-        self.matrix[3] = ['*' for _ in range(len(self.matrix[0]))]
-        self.matrix[4] = ['*' for _ in range(len(self.matrix[0]))]
+    def game_over_screen(self, text, winer):
+        self.frame.clean()
+        text_box = Box(35, 7, border='$')
+        text_box.clean()
+        col, row = text_box.get_center()
+        text_box.put_text(col, row - 1, text, align=CENTER)
+        text_box.put_text(col, row + 1, 'THE WINER ' + winer, align=CENTER)
 
-        self.matrix[2][0] = '*'
-        self.matrix[2][-1] = '*'
-        player1_ini = self.cols_center - int(self.cols_center/2)
-        player1_string = 'Player 1: 0'
-        self.player1_score_index = player1_ini + len(player1_string) - 1
-        player2_ini = self.cols_center + int(self.cols_center/2)
-        player2_string = 'Player 2: 0'
-        self.player2_score_index = player2_ini + len(player2_string) - 1
+        col, row = self.frame.get_center()
+        self.frame.put_box(col, row, text_box)
 
-        for col in range(player1_ini, player1_ini + len(player1_string)):
-            self.matrix[2][col] = player1_string[col - player1_ini]
-        for col in range(player2_ini, player2_ini + len(player2_string)):
-            self.matrix[2][col] = player2_string[col - player2_ini]
+        self.update()
 
-    def update_score(self, score):
-        self.matrix[2][self.player1_score_index] = str(score[PLAYER_X])
-        self.matrix[2][self.player2_score_index] = str(score[PLAYER_Y])
-
-    def update_map(self, map_matrix):
-        map_raw_ini = self.raws_center - int(len(map_matrix)/2)
-        map_col_ini = self.cols_center - int(len(map_matrix[0])/2)
-        for raw in range(map_raw_ini, map_raw_ini + len(map_matrix)):
-            for col in range(map_col_ini, map_col_ini + len(map_matrix[0])):
-                self.matrix[raw][col] = map_matrix[raw - map_raw_ini][col - map_col_ini]
-
-    def draw_matrix(self):
-        for raw in self.matrix:
+    def draw_frame(self):
+        for row in self.frame.matrix:
             line = ''
-            for tile in raw:
+            for tile in row:
                 line += tile 
             print(line)
 
     def update(self):
         os.system('clear')
-        self.draw_matrix()
+        self.draw_frame()
 
 
 class MapVisualizer():
-    def __init__(self, welcome_screen=False, fps=3, dance_frames=4):
+    def __init__(self, map_matrix, welcome_screen=True, fps=3, dance_frames=4):
         self.fps = fps
         self.dance_frames = dance_frames
         self.window = Window()
         if welcome_screen:
             self.window.welcome_screen()
-            self.window.update()
             time.sleep(5)
         self.window.clean_screen()
-        self.window.init_score()
         self.window.update()
 
-        self.map_max_raws = self.window.max_raws
-        self.map_max_cols = self.window.max_cols
+        self.map = Box(len(map_matrix[0]), len(map_matrix), ' ')
+        self.map.matrix = map_matrix
+
+        score_width = 20
+        score_height = 10
+
+        total_width = 2 + score_width + 2 + self.map.width 
+        if (score_height*2 > self.map.height):
+            total_height = 4 + score_height*2
+        else:
+            total_height = 4 + self.map.height
+
+        self.playerX = PlayerScoreBoard(score_width, score_height, 'Player_X')
+        self.playerY = PlayerScoreBoard(score_width, score_height, 'Player_Y')
+
+        col, row = self.window.frame.get_center()
+        self.sub_boxes = [{'col': col - int(total_width/2), 'row': row - int(total_height/2), 'box': self.playerX},
+                          {'col': col - int(total_width/2), 'row': row, 'box': self.playerY},
+                          {'col': col, 'row': row - int(total_height/2), 'box': self.map}]
+
+    def update_game(self):
+        for sub_box in self.sub_boxes:
+            self.window.frame.put_box(sub_box['col'], sub_box['row'], sub_box['box'], align=LEFT)
+        self.window.update()
+
+    def game_over(self, scores):
+        text = 'PLAYER_X: ' + str(scores[PLAYER_X]) + ' / '
+        text += 'PLAYER_Y: ' + str(scores[PLAYER_Y])
+        if scores[PLAYER_X] == scores[PLAYER_Y]:
+            winer = 'Tide'
+        elif scores[PLAYER_X] > scores[PLAYER_Y]:
+            winer = 'PLAYER_X'
+        else:
+            winer = 'PLAYER_Y'
+
+        self.window.game_over_screen(text, winer)
     
-    def check_map_size(self, map_matrix):
-        if len(map_matrix) > self.map_max_raws:
-            raise ValueError("Raw len {} > {}".format(len(map_matrix), self.map_max_raws))
-
-        for raw in map_matrix:
-            if len(raw) > self.map_max_cols:
-                raise ValueError("Col len {} > {}".format(len(raw), self.map_max_cols))
-
-
-    def draw(self, map_matrix, actions, score):
-        self.check_map_size(map_matrix)
-
-        if score is not None:
-            self.window.update_score(score)
+    def draw(self, map_matrix, actions, scores):
+        if scores is not None:
+            self.playerX.update(scores[PLAYER_X], 0, 0)
+            self.playerY.update(scores[PLAYER_Y], 0, 0)
 
         if actions is not None:
             if actions[PLAYER_X] == DANCE or actions[PLAYER_Y] == DANCE:
                 for cycle in range(self.dance_frames):
-                    for raw_index, raw in enumerate(map_matrix):
+                    for row_index, row in enumerate(map_matrix):
                         try:
-                            xcol_index = raw.index(PLAYER_X)
-                            xraw_index = raw_index
+                            xcol_index = row.index(PLAYER_X)
+                            xrow_index = row_index
                         except ValueError:
                             pass
 
                         try:
-                            ycol_index = raw.index(PLAYER_Y)
-                            yraw_index = raw_index
+                            ycol_index = row.index(PLAYER_Y)
+                            yrow_index = row_index
                         except ValueError:
                             pass
 
                     if actions[PLAYER_X] == DANCE:
-                        map_matrix[xraw_index][xcol_index] = PLAYER_X if cycle % 2 else '{0}{1}'.format(REVERSE, PLAYER_X)
+                        map_matrix[xrow_index][xcol_index] = PLAYER_X if cycle % 2 else '{0}{1}'.format(REVERSE, PLAYER_X)
                     if actions[PLAYER_Y] == DANCE:
-                        map_matrix[yraw_index][ycol_index] = PLAYER_Y if cycle % 2 else '{0}{1}'.format(REVERSE, PLAYER_Y)
+                        map_matrix[yrow_index][ycol_index] = PLAYER_Y if cycle % 2 else '{0}{1}'.format(REVERSE, PLAYER_Y)
 
-                    self.window.update_map(map_matrix)
-                    self.window.update()
+                    self.map.matrix = map_matrix
+                    self.update_game()
                     time.sleep(1 / self.fps)
 
-        self.window.update_map(map_matrix)
-        self.window.update()
+        self.map.matrix = map_matrix
+        self.update_game()
         time.sleep(1 / self.fps)
 
 
 from game import map_generator
 if __name__ == '__main__':
-    map_visualizer = MapVisualizer()
-    example_map = map_generator.generate(30, 30, 0.01, 0.01, 0.05)
-
+    example_map = map_generator.generate(40, 40, 0.01, 0.01, 0.05)
+    map_visualizer = MapVisualizer(example_map, welcome_screen=True)
     map_visualizer.draw(example_map, None, {PLAYER_X: 60, PLAYER_Y: 1})
-    time.sleep(5)
+
+    for i in range(10):
+        map_visualizer.draw(example_map, None, {PLAYER_X: i, PLAYER_Y: i*2})
+        time.sleep(1)
