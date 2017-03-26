@@ -9,10 +9,10 @@ This is a project done in the pycamp held at Baradero 2017.
 ## Installation
 `pip install -r requirements.txt`
 
-# To play with default parameters
+## To play with default parameters
 `python choppycamp.py`
 
-# Example using custom parameters
+## Example using custom parameters
 `python choppycamp.py --player-x priority_bot --player-y normal_bot --fps 10 --max-turns 1000 --rooms 4`
 
 
