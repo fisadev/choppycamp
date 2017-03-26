@@ -3,7 +3,7 @@
 > Game in which some bots have to pick most of the laptops or beer chops to win.
 
 This is a project done in the pycamp held at Baradero 2017.
-
+![Game example](./game_example.gif)
 
 ## Installation
 `pip install -r requirements.txt`
