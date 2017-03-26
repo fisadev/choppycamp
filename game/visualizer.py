@@ -7,12 +7,13 @@ import random
 import sys
 sys.path.append('../')
 
-from constants import PLAYER_X, PLAYER_Y, DANCE, UP
+from constants import PLAYER_X, PLAYER_Y, DANCE, UP, REVERSE
 
 class Window():
     def __init__(self):
         self.max_cols, self.max_raws = shutil.get_terminal_size()
         self.max_raws -= 2
+        self.max_cols -= 2
 
         if self.max_cols < 50 or self.max_raws < 30:
             raise ValueError("Console too small {}x{}".format(self.max_raws, self.max_cols))
@@ -83,7 +84,9 @@ class Window():
 
 
 class MapVisualizer():
-    def __init__(self, welcome_screen=False):
+    def __init__(self, welcome_screen=False, fps=3, dance_frames=4):
+        self.fps = fps
+        self.dance_frames = dance_frames
         self.window = Window()
         if welcome_screen:
             self.window.welcome_screen()
@@ -112,8 +115,8 @@ class MapVisualizer():
             self.window.update_score(score)
 
         if actions is not None:
-            if actions[PLAYER_X] == DANCE or actions[PALYER_Y] == DANCE:
-                for cycle in range(10):
+            if actions[PLAYER_X] == DANCE or actions[PLAYER_Y] == DANCE:
+                for cycle in range(self.dance_frames):
                     for raw_index, raw in enumerate(map_matrix):
                         try:
                             xcol_index = raw.index(PLAYER_X)
@@ -128,31 +131,23 @@ class MapVisualizer():
                             pass
 
                     if actions[PLAYER_X] == DANCE:
-                        map_matrix[xraw_index][xcol_index] = PLAYER_X.lower() if cycle % 2 else PLAYER_X.upper()
+                        map_matrix[xraw_index][xcol_index] = PLAYER_X if cycle % 2 else '{0}{1}'.format(REVERSE, PLAYER_X)
                     if actions[PLAYER_Y] == DANCE:
-                        map_matrix[yraw_index][ycol_index] = PLAYER_Y.lower() if cycle % 2 else PLAYER_Y.upper()
+                        map_matrix[yraw_index][ycol_index] = PLAYER_Y if cycle % 2 else '{0}{1}'.format(REVERSE, PLAYER_Y)
+
                     self.window.update_map(map_matrix)
                     self.window.update()
-                    time.sleep(0.5)
+                    time.sleep(1 / self.fps)
 
         self.window.update_map(map_matrix)
         self.window.update()
-
-    def game_over(self, score):
-        pass
+        time.sleep(1 / self.fps)
 
 
-def generate_raw_map(raws, cols):
-    matrix = [['.' for _ in range(cols)] for _ in range(raws)]
-    matrix[int(raws/2)][int(cols/2)] = PLAYER_X
-    matrix[int(raws/2)+1][int(cols/2)+1] = PLAYER_Y
-    return matrix
-
+from game import map_generator
 if __name__ == '__main__':
     map_visualizer = MapVisualizer()
-
-    example_map = generate_raw_map(10, 10)
-    map_visualizer.draw(example_map, None, None)
+    example_map = map_generator.generate(30, 30, 0.01, 0.01, 0.05)
 
     map_visualizer.draw(example_map, None, {PLAYER_X: 60, PLAYER_Y: 1})
     time.sleep(5)
