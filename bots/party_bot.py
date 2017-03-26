@@ -3,7 +3,7 @@ from bots.base_bot import BaseBot
 import utils
 
 
-class FanBot(BaseBot):
+class PartyBot(BaseBot):
     def act(self, map_):
         if self.id == constants.PLAYER_X:
             other = constants.PLAYER_Y
@@ -26,4 +26,4 @@ class FanBot(BaseBot):
         return next_step
 
 def create_bot(id_, map_, other_player):
-    return FanBot(id_, map_, other_player)
+    return PartyBot(id_, map_, other_player)
