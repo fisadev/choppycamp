@@ -10,5 +10,5 @@ class RandomBot(BaseBot):
         ])
 
 
-def create_bot(map_, id_, other_player):
+def create_bot(id_, map_, other_player):
     return RandomBot(id_, map_, other_player)
