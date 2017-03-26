@@ -24,9 +24,12 @@ from game.visualizer import MapVisualizer
 @click.option('--room-chopp-density', default=0.05, help='Density of chopps in the room.')
 @click.option('--room-laptop-density', default=0.71, help='Density of laptops in the room.')
 @click.option('--rooms', default=1, help='Number of rooms.')
+@click.option('--nerd-factor', default=1, help='How much does a laptop nerdifies players.')
+@click.option('--drunk-factor', default=1, help='How much does chopp affect reflexes.')
 def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
          box_density, chopp_density, laptop_density, room_width, room_height,
-         room_box_density, room_chopp_density, room_laptop_density, rooms):
+         room_box_density, room_chopp_density, room_laptop_density, rooms,
+         drunk_factor, nerd_factor):
     if not map_file:
         map_ = build_map(
             map_width, map_height,
@@ -56,6 +59,8 @@ def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
         max_turns=max_turns,
         map_=map_,
         visualizer=MapVisualizer(fps=fps),
+        drunk_factor=drunk_factor,
+        nerd_factor=nerd_factor,
     )
     game.play()
 
