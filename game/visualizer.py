@@ -25,6 +25,15 @@ class MapVisualizer():
                 line = line + tile
             print(line)
 
+    def draw_gamestate(self, score):
+        print()
+
+        score_display = "SCORES:\n"
+        for player, points in score.items():
+            score_display += "\t{0}: {1}".format(player, points)
+
+        print(score_display)
+
     def draw(self, map_matrix, actions, score):
         self.check_map_size(map_matrix)
 
@@ -51,10 +60,12 @@ class MapVisualizer():
                         map_matrix[yraw_index][ycol_index] = PLAYER_Y if cycle % 2 else '{0}{1}'.format(REVERSE, PLAYER_Y)
 
                     self.draw_matrix(map_matrix)
+                    self.draw_gamestate(score)
                     time.sleep(1 / self.fps)
                     os.system('clear')
 
         self.draw_matrix(map_matrix)
+        self.draw_gamestate(score)
         time.sleep(1 / self.fps)
 
     def game_over(self, score):
