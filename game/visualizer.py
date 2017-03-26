@@ -78,13 +78,13 @@ class PlayerScoreBoard(Box):
         self.player_name = player_name 
         self.update(0, 0, 0)
 
-    def update(self, score, drunknes, nerdnes):
+    def update(self, score, nerding, drunkness):
         self.clean()
         col, row = self.get_center()
         self.put_text(col, 3, self.player_name, align=CENTER)
         self.put_text(col, 5, 'Score: ' + str(score), align=CENTER)
-        self.put_text(col, 6, 'Drunknes: ' + str(drunknes), align=CENTER)
-        self.put_text(col, 7, 'Nerdnes: ' + str(nerdnes), align=CENTER)
+        self.put_text(col, 6, 'Drunknes: ' + str(drunkness), align=CENTER)
+        self.put_text(col, 7, 'Nerdnes: ' + str(nerding), align=CENTER)
 
 
 class Window():
@@ -146,7 +146,7 @@ class MapVisualizer():
         self.window = Window()
         if welcome_screen:
             self.window.welcome_screen()
-            time.sleep(5)
+            time.sleep(1.5)
         self.window.clean_screen()
         self.window.update()
 
@@ -187,10 +187,10 @@ class MapVisualizer():
 
         self.window.game_over_screen(text, winer)
     
-    def draw(self, map_matrix, actions, scores):
+    def draw(self, map_matrix, actions, scores, nerding, drunkness):
         if scores is not None:
-            self.playerX.update(scores[PLAYER_X], 0, 0)
-            self.playerY.update(scores[PLAYER_Y], 0, 0)
+            self.playerX.update(scores[PLAYER_X], nerding[PLAYER_X], drunkness[PLAYER_X])
+            self.playerY.update(scores[PLAYER_Y], nerding[PLAYER_Y], drunkness[PLAYER_Y])
 
         if actions is not None:
             if actions[PLAYER_X] == DANCE or actions[PLAYER_Y] == DANCE:

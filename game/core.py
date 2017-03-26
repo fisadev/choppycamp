@@ -92,7 +92,8 @@ class Game:
         actions = self.get_actions_from_players()
         self.apply_actions(actions)
         if self.visualizer is not None:
-            self.visualizer.draw(deepcopy(self.map), actions, self.scores)
+            self.visualizer.draw(deepcopy(self.map), actions, self.scores, self.nerding,
+                    self.drunkness)
 
     def drunkify_action(self, player_id, action):
         player_drunkness = self.drunkness[player_id] * self.drunk_factor
