@@ -25,5 +25,6 @@ class PartyBot(BaseBot):
 
         return next_step
 
+
 def create_bot(id_, map_, other_player):
     return PartyBot(id_, map_, other_player)
