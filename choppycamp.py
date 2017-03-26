@@ -55,7 +55,7 @@ def main(player_x, player_y, max_turns, map_file, map_width, map_height, fps,
         },
         max_turns=max_turns,
         map_=map_,
-        visualizer=MapVisualizer(fps=fps),
+        visualizer=MapVisualizer(map_, fps=fps),
     )
     game.play()
 
