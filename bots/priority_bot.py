@@ -1,7 +1,7 @@
 import constants
 from bots.base_bot import BaseBot
-import random
 import utils
+
 
 class PriorityBot(BaseBot):
     '''This bot try to find the laptops first, and then the chops'''

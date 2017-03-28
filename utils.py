@@ -27,7 +27,7 @@ def get_bot(bot_name, id_, other_player, map_):
     return bot
 
 
-def a_star_calculate_h( from_coords, to_coords):
+def a_star_calculate_h(from_coords, to_coords):
     drow = abs(from_coords[0] - to_coords[0])
     dcol = abs(from_coords[1] - to_coords[1])
 
@@ -40,7 +40,7 @@ def next_move(path):
     return path[0]['action']
 
 
-def next_node_to_process( pending_nodes):
+def next_node_to_process(pending_nodes):
     return sorted(pending_nodes, key=lambda node: node['F'])[0]
 
 

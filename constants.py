@@ -46,7 +46,7 @@ ACTION_DELTAS = {
 }
 
 WON = 'won'
-LOST  = 'lost'
+LOST = 'lost'
 TIE = 'tie'
 
 RESULTS = WON, LOST, TIE
