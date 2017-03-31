@@ -72,6 +72,15 @@ class Box():
                 self.matrix[row + row_index][col + col_index] = box.matrix[row_index][col_index]
 
 
+class DebugBox(Box):
+    def __init__(self, width, height):
+        super(DebugBox, self).__init__(width, height, ' ')
+
+    def update(self, debug_lines):
+        self.clean()
+        for i, line in enumerate(debug_lines):
+            self.put_text(0, i, line, align=LEFT)
+
 class PlayerScoreBoard(Box):
     def __init__(self, width, height, player_name):
         super(PlayerScoreBoard, self).__init__(width, height, '%')
@@ -162,11 +171,14 @@ class MapVisualizer():
         else:
             total_height = 4 + self.map.height
 
+        self.debugbox = DebugBox(total_width, total_height)
+
         self.playerX = PlayerScoreBoard(score_width, score_height, 'Player_X')
         self.playerY = PlayerScoreBoard(score_width, score_height, 'Player_Y')
 
         col, row = self.window.frame.get_center()
-        self.sub_boxes = [{'col': col - int(total_width/2), 'row': row - int(total_height/2), 'box': self.playerX},
+        self.sub_boxes = [{'col': 0, 'row': 0, 'box': self.debugbox},
+                          {'col': col - int(total_width/2), 'row': row - int(total_height/2), 'box': self.playerX},
                           {'col': col - int(total_width/2), 'row': row, 'box': self.playerY},
                           {'col': col, 'row': row - int(total_height/2), 'box': self.map}]
 
@@ -187,7 +199,10 @@ class MapVisualizer():
 
         self.window.game_over_screen(text, winer)
     
-    def draw(self, map_matrix, actions, scores, nerding, drunkness):
+    def draw(self, map_matrix, actions, scores, nerding, drunkness, debug_lines=None):
+        if debug_lines is not None:
+            self.debugbox.update(debug_lines)
+
         if scores is not None:
             self.playerX.update(scores[PLAYER_X], nerding[PLAYER_X], drunkness[PLAYER_X])
             self.playerY.update(scores[PLAYER_Y], nerding[PLAYER_Y], drunkness[PLAYER_Y])
