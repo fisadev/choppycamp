@@ -92,8 +92,9 @@ class Game:
         actions = self.get_actions_from_players()
         self.apply_actions(actions)
         if self.visualizer is not None:
+            debug_lines = self.get_debug_from_players()
             self.visualizer.draw(deepcopy(self.map), actions, self.scores, self.nerding,
-                                 self.drunkness)
+                                 self.drunkness, debug_lines=debug_lines)
 
     def drunkify_action(self, player_id, action):
         player_drunkness = self.drunkness[player_id] * self.drunk_factor
@@ -110,6 +111,16 @@ class Game:
             return DANCE
         else:
             return action
+
+    def get_debug_from_players(self):
+        debug_lines = []
+        for player_id, player in self.players.items():
+            if hasattr(player, 'get_debug_lines'):
+                debug_lines += ["\nPlayer {}".format(player_id)]
+                debug_lines += player.get_debug_lines()
+        if not debug_lines:
+            return None
+        return debug_lines
 
     def get_actions_from_players(self):
         actions = {}
